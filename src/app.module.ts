@@ -13,7 +13,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       port: 5432,
       username: 'postgres',
       password: 'root',
-      database: 'kundalineHealthData',
+      database: 'kundalineHealthData1',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),

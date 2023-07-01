@@ -12,9 +12,14 @@ export class RegisterController {
     return this.registerService.create(createRegisterDto);
   }
 
-  @Get()
-  findAll(@Body() createRegisterDto: CreateRegisterDto) {
-    return this.registerService.findAll();
+  @Post('admin/add/new/0')
+  createAdminUser(@Body() createRegisterDto: CreateRegisterDto) {
+    return this.registerService.createAdminUserProfile(createRegisterDto);
+  }
+
+  @Get(':adminCode')
+  findAll(@Body() id: string) {
+    return this.registerService.findAll(+id);
   }
 
   @Get(':id')
