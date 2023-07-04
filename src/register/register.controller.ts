@@ -32,8 +32,8 @@ export class RegisterController {
     return this.registerService.update(+id, updateRegisterDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.registerService.remove(+id);
+  @Post('delete')
+  remove() {
+    return this.registerService.remove();
   }
 }

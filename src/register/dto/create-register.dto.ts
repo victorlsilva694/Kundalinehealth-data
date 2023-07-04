@@ -4,5 +4,4 @@ export class CreateRegisterDto {
     readonly birthDate: string;
     readonly email: string;
     readonly password: string;
-    readonly isAdmin: number;
 }

@@ -29,21 +29,6 @@ export class RegisterService {
 
   }
 
-  async createAdminUser(createRegisterDto: CreateRegisterDto): Promise<User> {
-    const { name, lastName, email, birthDate } = createRegisterDto;
-
-    const hashedPassword = await this.hashPassword(uuidv4().split('-')[0]);
-
-    const user = new User();
-    user.name = name;
-    user.email = email;
-    user.lastName = lastName;
-    user.password = hashedPassword;
-    user.birthDate = birthDate;
-
-    return user;
-  }
-
   async createUser(createRegisterDto: CreateRegisterDto): Promise<User> {
     const { name, lastName, email, birthDate } = createRegisterDto;
 
@@ -69,8 +54,8 @@ export class RegisterService {
 
     if (!foundUser || !passwordMatch) {
       return null;
-    } 
-      
+    }
+
     return foundUser.password
   }
 
@@ -86,28 +71,35 @@ export class RegisterService {
   }
 
   async createAdminUserProfile(createRegisterDto: CreateRegisterDto) {
-    try {
-      const user = await this.createAdminUser(createRegisterDto);
-      const foundUser = await this.userRepository.findOne({ where: { name: user.name } });
-      if (!foundUser) {
-        return null;
-      }
-    
-      const passwordMatch = await bcrypt.compare(user.password, foundUser.password);
-    
-      if (!passwordMatch) {
-        return null;
+    const foundUser = await this.userRepository.findOne({ where: { email: process.env.email } });
+
+    if (!foundUser) {
+      let userAdminData = {
+        name: process.env.name,
+        lastName: process.env.lastName,
+        birthDate: process.env.birthDate,
+        email: process.env.email,
+        password: process.env.password
       }
 
-      return foundUser;
-      
-    } catch (error) {
-      return { success: false, message: 'Error', error: error.message };
+      const passwordHash = await this.hashPassword(userAdminData.password);
+
+      const user = new User();
+      user.name = userAdminData.name;
+      user.email = userAdminData.email;
+      user.lastName = userAdminData.lastName;
+      user.password = passwordHash;
+      user.birthDate = userAdminData.birthDate;
+
+      const insertAdminUserOnDataBase = this.userRepository.save(user);
+
+      return insertAdminUserOnDataBase;
     }
+
+    return foundUser;
   }
 
   async sendMailConfirmation(name: string, email: string, password: string) {
-
     const transporter = nodemailer.createTransport({
       host: 'smtp.office365.com',
       port: 587,
@@ -149,7 +141,8 @@ export class RegisterService {
     return `This action updates a #${id} register`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} register`;
+ async remove() {
+    const deleteAllUsers = await this.userRepository.delete({});
+    return deleteAllUsers;
   }
 }
