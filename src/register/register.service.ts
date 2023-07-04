@@ -99,48 +99,6 @@ export class RegisterService {
     return foundUser;
   }
 
-  async sendMailConfirmation(name: string, email: string, password: string) {
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.office365.com',
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    const emailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: 'Password Confirmation',
-      text: `
-        <h1>Hello<h1>, Your email address, ${email}, associated with your Authy Account was successfully verified.
-        Your password is: ${password}
-      `,
-    };
-
-    try {
-      const info = await transporter.sendMail(emailOptions);
-      console.log('Email enviado:', info.response);
-    } catch (error) {
-      console.error('Erro ao enviar o email:', error);
-    }
-  }
-
-
-  findAll(isAdmin: number) {
-    return `This action returns all register`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} register`;
-  }
-
-  update(id: number, updateRegisterDto: UpdateRegisterDto) {
-    return `This action updates a #${id} register`;
-  }
-
  async remove() {
     const deleteAllUsers = await this.userRepository.delete({});
     return deleteAllUsers;
