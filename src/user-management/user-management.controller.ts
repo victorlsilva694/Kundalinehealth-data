@@ -5,12 +5,7 @@ import { UpdateUserManagementDto } from './dto/update-user-management.dto';
 
 @Controller('user-management')
 export class UserManagementController {
-  constructor(private readonly userManagementService: UserManagementService) {}
-
-  @Post()
-  create(@Body() createUserManagementDto: CreateUserManagementDto) {
-    return this.userManagementService.create(createUserManagementDto);
-  }
+  constructor(private readonly userManagementService: UserManagementService) { }
 
   @Get()
   findAll() {
@@ -18,8 +13,8 @@ export class UserManagementController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userManagementService.findOne(+id);
+  findUserById(@Param('id') id: string) {
+    return this.userManagementService.findOneById(+id);
   }
 
   @Patch(':id')
