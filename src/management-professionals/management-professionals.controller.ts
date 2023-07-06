@@ -11,10 +11,10 @@ import {
 import { ManagementProfessionalsService } from './management-professionals.service';
 import { CreateManagementProfessionalDto } from './dto/create-management-professional.dto';
 import { UpdateManagementProfessionalDto } from './dto/update-management-professional.dto';
-import { JwtGuard } from 'src/guards/jwt.guard';
+import { TrustGuard } from 'src/trust/trust.guard';
 
 @Controller('management-professionals')
-@UseGuards(JwtGuard)
+@UseGuards(TrustGuard)
 export class ManagementProfessionalsController {
   constructor(
     private readonly managementProfessionalsService: ManagementProfessionalsService,
@@ -36,22 +36,50 @@ export class ManagementProfessionalsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.managementProfessionalsService.findOne(+id);
+    return this.managementProfessionalsService.findProfessionalById(+id);
   }
 
-  @Patch(':id')
+  @Post(':id')
   update(
     @Param('id') id: string,
     @Body() updateManagementProfessionalDto: UpdateManagementProfessionalDto,
   ) {
-    return this.managementProfessionalsService.update(
+    return this.managementProfessionalsService.updateProfessionalById(
       +id,
       updateManagementProfessionalDto,
     );
   }
 
+  @Get('/search/register/:register')
+  searchProfessionalByRegisterCode(
+    @Param('register') register: string,
+  ) {
+    return this.managementProfessionalsService.searchProfessionalByRegisterCode(
+      register,
+    );
+  }
+
+  @Get('/search/specialty/:specialty')
+  searchProfessionalBySpecialty(
+    @Param('specialty') specialty: string,
+  ) {
+    return this.managementProfessionalsService.searchProfessionalBySpecialty(
+      specialty,
+    );
+  }
+
+  @Get('/search/name/:name')
+  searchProfessionalByName(
+    @Param('name') name: string,
+  ) {
+    return this.managementProfessionalsService.searchProfessionalByName(
+      name,
+    );
+  }
+  
+
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.managementProfessionalsService.remove(+id);
+    return this.managementProfessionalsService.removeProfessionalById(+id);
   }
 }

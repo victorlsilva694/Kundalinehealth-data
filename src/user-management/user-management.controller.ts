@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { UserManagementService } from './user-management.service';
 import { CreateUserManagementDto } from './dto/create-user-management.dto';
 import { UpdateUserManagementDto } from './dto/update-user-management.dto';
+import { TrustGuard } from 'src/trust/trust.guard';
 
 @Controller('user-management')
+@UseGuards(TrustGuard)
 export class UserManagementController {
   constructor(private readonly userManagementService: UserManagementService) { }
 
