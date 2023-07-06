@@ -17,13 +17,13 @@ export class UserManagementController {
     return this.userManagementService.findOneById(+id);
   }
 
-  @Patch(':id')
+  @Post(':id')
   update(@Param('id') id: string, @Body() updateUserManagementDto: UpdateUserManagementDto) {
-    return this.userManagementService.update(+id, updateUserManagementDto);
+    return this.userManagementService.updateUserById(+id, updateUserManagementDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userManagementService.remove(+id);
+    return this.userManagementService.removeUserById(+id);
   }
 }

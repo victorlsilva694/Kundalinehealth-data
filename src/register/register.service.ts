@@ -14,7 +14,7 @@ export class RegisterService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-  ) { }
+  ) {}
 
   async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt(10);
@@ -26,7 +26,6 @@ export class RegisterService {
   async createAdminDefaultUserProfile(createRegisterDto: CreateRegisterDto) {
     const user = await this.createUser(createRegisterDto);
     const savedUser = await this.saveUser(user);
-
   }
 
   async createUser(createRegisterDto: CreateRegisterDto): Promise<User> {
@@ -49,14 +48,19 @@ export class RegisterService {
   }
 
   async findUser(user: User) {
-    const foundUser = await this.userRepository.findOne({ where: { name: user.name } });
-    const passwordMatch = await bcrypt.compare(user.password, foundUser.password);
+    const foundUser = await this.userRepository.findOne({
+      where: { name: user.name },
+    });
+    const passwordMatch = await bcrypt.compare(
+      user.password,
+      foundUser.password,
+    );
 
     if (!foundUser || !passwordMatch) {
       return null;
     }
 
-    return foundUser.password
+    return foundUser.password;
   }
 
   async create(createRegisterDto: CreateRegisterDto) {
@@ -71,7 +75,9 @@ export class RegisterService {
   }
 
   async createAdminUserProfile(createRegisterDto: CreateRegisterDto) {
-    const foundUser = await this.userRepository.findOne({ where: { email: process.env.email } });
+    const foundUser = await this.userRepository.findOne({
+      where: { email: process.env.email },
+    });
 
     if (!foundUser) {
       let userAdminData = {
@@ -79,8 +85,8 @@ export class RegisterService {
         lastName: process.env.lastName,
         birthDate: process.env.birthDate,
         email: process.env.email,
-        password: process.env.password
-      }
+        password: process.env.password,
+      };
 
       const passwordHash = await this.hashPassword(userAdminData.password);
 
@@ -99,7 +105,7 @@ export class RegisterService {
     return foundUser;
   }
 
- async remove() {
+  async remove() {
     const deleteAllUsers = await this.userRepository.delete({});
     return deleteAllUsers;
   }

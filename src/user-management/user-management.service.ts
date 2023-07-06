@@ -10,13 +10,13 @@ export class UserManagementService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-  ) { }
+  ) {}
 
   async findAll() {
     const foundAllUser = await this.userRepository.find({
       where: {
-        email: Not("admin@gmail.com")
-      }
+        email: Not('admin@gmail.com'),
+      },
     });
 
     return foundAllUser;
@@ -25,22 +25,33 @@ export class UserManagementService {
   async findOneById(id: number) {
     const foundUserById = await this.userRepository.find({
       where: {
-        id: id
-      }
+        id: id,
+      },
     });
 
     return foundUserById;
   }
 
-  async updateUserDataById(updateUserManagementDto: UpdateUserManagementDto) {
-    return updateUserManagementDto;
+  async updateUserById(
+    id: number,
+    updateUserManagementDto: UpdateUserManagementDto,
+  ) {
+    await this.userRepository.update(id, updateUserManagementDto);
+    const userUpdated = this.userRepository.findOne({ where: { id: id } });
+
+    return userUpdated;
   }
 
-  update(id: number, updateUserManagementDto: UpdateUserManagementDto) {
-    return `This action updates a #${id} userManagement`;
-  }
+  async removeUserById(id: number) {
+    const getUserToRemove = await this.userRepository.findOne({
+      where: { id: id },
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} userManagement`;
+    if (getUserToRemove) {
+      await this.userRepository.remove(getUserToRemove);
+      return { success: 'User deleted successfully' };
+    }
+
+    return { error: 'The error occurred when deleting the user' };
   }
 }
